@@ -13,11 +13,7 @@ class VKAPI extends yii\base\Object {
     public $redirect_uri;
     public $token;
 
-    public function init() {
-        if (!$this->client_id) {
-            throw new \yii\base\Exception('client_id not specified');
-        }
-    }
+  
 
     /**
      * Получение ссылки для перенаправление пользователя при авторизации
