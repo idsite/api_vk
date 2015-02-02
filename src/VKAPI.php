@@ -1,6 +1,6 @@
 <?php
 
-namespace idsite;
+namespace idsite\api_vk;
 
 /**
  * Description of VKAPI
