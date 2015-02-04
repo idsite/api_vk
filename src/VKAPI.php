@@ -6,7 +6,7 @@ namespace idsite\api_vk;
  * Description of VKAPI
  *
  */
-class VKAPI extends yii\base\Object {
+class VKAPI extends \yii\base\Object {
 
     public $client_id;
     public $version = '5.28';
