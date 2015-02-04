@@ -12,6 +12,7 @@ class VKAPI extends yii\base\Object {
     public $version = '5.28';
     public $redirect_uri;
     public $token;
+    public $client_secret;
 
     /**
      * Получение ссылки для перенаправление пользователя при авторизации
@@ -32,28 +33,30 @@ class VKAPI extends yii\base\Object {
     }
 
     /**
+     * получение токена
      * {"access_token":"...", "expires_in":<int>, '''user_id":<int>} 
      * @link https://vk.com/dev/auth_sites
-     * @param type $client_secret
-     * @param type $code
-     * @return type
+     * @param string $code
+     * @return array|bool
      */
-    public function access_token($client_secret, $code = null) {
+    public function accessToken($code = null) {
         if ($code === null) {
             $code = \Yii::$app->getRequest()->getQueryParam('code');
         }
 
         $url = 'https://oauth.vk.com/access_token?' . http_build_query([
                     'client_id' => $this->client_id,
-                    'client_secret' => $client_secret,
+                    'client_secret' => $this->client_secret,
                     'code' => $code,
                     'redirect_uri' => $this->redirect_uri
         ]);
         $t = \yii\helpers\Json::decode(file_get_contents($url), true);
-        if (isset($t['access_token']) && !$this->token) {
+        if (isset($t['access_token'])) {
             $this->token = $t['access_token'];
+            return $t;
+        } else {
+            return false;
         }
-        return $t;
     }
 
     /**
