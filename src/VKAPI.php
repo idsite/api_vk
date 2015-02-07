@@ -42,6 +42,9 @@ class VKAPI extends \yii\base\Object {
     public function accessToken($code = null) {
         if ($code === null) {
             $code = \Yii::$app->getRequest()->getQueryParam('code');
+            if ($code === null) {
+                return false;
+            }
         }
 
         $url = 'https://oauth.vk.com/access_token?' . http_build_query([
@@ -75,6 +78,16 @@ class VKAPI extends \yii\base\Object {
         $result = file_get_contents($url);
 
         return $result;
+    }
+    
+    /**
+     * редирект с закрытием попапа
+     * @param string $url
+     */
+    public function redirect($url)
+    {
+       echo \Yii::$app->view->renderFile(__DIR__.'/_redirect.php',['url'=>$url],$this);
+       \Yii::$app->end();
     }
 
 }
