@@ -77,7 +77,7 @@ class VKAPI extends \yii\base\Object {
 
         $result = file_get_contents($url);
 
-        return $result;
+        return \yii\helpers\Json::decode($result);
     }
     
     /**
