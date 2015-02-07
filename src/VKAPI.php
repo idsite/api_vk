@@ -69,9 +69,9 @@ class VKAPI extends \yii\base\Object {
      * @throws Exception
      */
     public function api($method_name, $params = []) {
-        if (!$this->token)
-            throw new Exception('no token');
-        $params['access_token'] = $this->token;
+
+        if ($this->token)
+            $params['access_token'] = $this->token;
 
         $url = 'https://api.vk.com/method/' . $method_name . '?' . http_build_query($params);
 
@@ -79,15 +79,14 @@ class VKAPI extends \yii\base\Object {
 
         return \yii\helpers\Json::decode($result);
     }
-    
+
     /**
      * редирект с закрытием попапа
      * @param string $url
      */
-    public function redirect($url)
-    {
-       echo \Yii::$app->view->renderFile(__DIR__.'/_redirect.php',['url'=>$url],$this);
-       \Yii::$app->end();
+    public function redirect($url) {
+        echo \Yii::$app->view->renderFile(__DIR__ . '/_redirect.php', ['url' => $url], $this);
+        \Yii::$app->end();
     }
 
 }
