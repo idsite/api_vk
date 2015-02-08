@@ -17,19 +17,18 @@ class VKAPI extends \yii\base\Object {
     /**
      * Получение ссылки для перенаправление пользователя при авторизации
      * @link https://vk.com/dev/oauth_dialog
-     * @param type $display
-     * @param type $scope https://vk.com/dev/permissions
-     * @param type $response_type
+     * @param array $params
      */
-    public function getUrlOAuth($display = 'popup', $scope = [], $response_type = 'code') {
-        return 'https://oauth.vk.com/authorize?' . http_build_query([
+    public function getUrlOAuth($params=[]) {
+        $paramsDefault=[
                     'client_id' => $this->client_id,
                     'redirect_uri' => $this->redirect_uri,
-                    'display' => $display,
-                    'scope' => implode(',', $scope),
-                    'response_type' => $response_type,
+                    'display' => 'popup',
+                    'response_type' => 'code',
                     'v' => $this->version
-        ]);
+        ];
+        
+        return 'https://oauth.vk.com/authorize?' . http_build_query(array_merge($paramsDefault,$params));
     }
 
     /**
