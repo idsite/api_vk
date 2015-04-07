@@ -19,16 +19,16 @@ class VKAPI extends \yii\base\Object {
      * @link https://vk.com/dev/oauth_dialog
      * @param array $params
      */
-    public function getUrlOAuth($params=[]) {
-        $paramsDefault=[
-                    'client_id' => $this->client_id,
-                    'redirect_uri' => $this->redirect_uri,
-                    'display' => 'popup',
-                    'response_type' => 'code',
-                    'v' => $this->version
+    public function getUrlOAuth($params = []) {
+        $paramsDefault = [
+            'client_id' => $this->client_id,
+            'redirect_uri' => $this->redirect_uri,
+            'display' => 'popup',
+            'response_type' => 'code',
+            'v' => $this->version
         ];
-        
-        return 'https://oauth.vk.com/authorize?' . http_build_query(array_merge($paramsDefault,$params));
+
+        return 'https://oauth.vk.com/authorize?' . http_build_query(array_merge($paramsDefault, $params));
     }
 
     /**
@@ -52,7 +52,7 @@ class VKAPI extends \yii\base\Object {
                     'code' => $code,
                     'redirect_uri' => $this->redirect_uri
         ]);
-        $t = \yii\helpers\Json::decode(file_get_contents($url), true);
+        $t = \yii\helpers\Json::decode($this->_getContent($url), true);
         if (isset($t['access_token'])) {
             $this->token = $t['access_token'];
             return $t;
@@ -74,7 +74,7 @@ class VKAPI extends \yii\base\Object {
 
         $url = 'https://api.vk.com/method/' . $method_name . '?' . http_build_query($params);
 
-        $result = file_get_contents($url);
+        $result = $this->_getContent($url);
 
         return \yii\helpers\Json::decode($result);
     }
@@ -86,6 +86,17 @@ class VKAPI extends \yii\base\Object {
     public function redirect($url) {
         echo \Yii::$app->view->renderFile(__DIR__ . '/_redirect.php', ['url' => $url], $this);
         \Yii::$app->end();
+    }
+
+    private function _getContent($url) {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 20);
+        $data = curl_exec($ch);
+        curl_close($ch);
+        return $data;
     }
 
 }
