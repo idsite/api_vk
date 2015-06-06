@@ -15,6 +15,12 @@ class VKAPI extends \yii\base\Object {
     public $client_secret;
 
     /**
+     * задержка в микросекундах
+     * @var type 
+     */
+    public $usleep;
+
+    /**
      * Получение ссылки для перенаправление пользователя при авторизации
      * @link https://vk.com/dev/oauth_dialog
      * @param array $params
@@ -89,6 +95,10 @@ class VKAPI extends \yii\base\Object {
     }
 
     private function _getContent($url) {
+        if ($this->usleep) {
+            usleep($this->usleep);
+        }
+
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_HEADER, false);
