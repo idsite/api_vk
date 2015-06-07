@@ -19,6 +19,7 @@ class VKAPI extends \yii\base\Object {
      * @var type 
      */
     public $usleep;
+    private $_time;
 
     /**
      * Получение ссылки для перенаправление пользователя при авторизации
@@ -82,7 +83,14 @@ class VKAPI extends \yii\base\Object {
 
         $result = $this->_getContent($url);
 
-        return \yii\helpers\Json::decode($result);
+        try {
+            $result = \yii\helpers\Json::decode($result);
+        } catch (\Exception $exc) {
+            \Yii::error($exc->getMessage() . PHP_EOL . 'result:' . PHP_EOL . $result);
+            throw $exc;
+        }
+
+        return $result;
     }
 
     /**
@@ -96,7 +104,9 @@ class VKAPI extends \yii\base\Object {
 
     private function _getContent($url) {
         if ($this->usleep) {
-            usleep($this->usleep);
+            $mt = microtime();
+            usleep(($this->_time === null || $mt - $this->_time >= $this->usleep) ? 0 : $this->usleep - ($mt - $this->_time));
+            $this->_time = $mt;
         }
 
         $ch = curl_init();
