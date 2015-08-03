@@ -1,7 +1,7 @@
 # api_vk
 Класс для работы с API vk
 
-Компонент в конфиге:
+# Компонент в конфиге:
 'vk'=>
         [
             'class'=>'\idsite\api_vk\VKAPI',
@@ -10,11 +10,10 @@
             'redirect_uri'=>'...'
         ],
 
-ссылка:
+# Ссылка:
   <a href="<?=Yii::$app->vk->getUrlOAuth()?>" onclick="window.open(this.href,'Вход через VK','width=600,height=500,resizable=yes,scrollbars=yes,status=yes');return false">Войти через вк</a>
 
-
-дейсвие:
+# Дейсвие:
     public function actionLogin() {
         if (!\Yii::$app->user->isGuest) {
             return $this->goHome();
